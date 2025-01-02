@@ -1,4 +1,3 @@
-import pytz
 from typing import Protocol
 import sqlite3
 from pathlib import Path
@@ -14,8 +13,6 @@ class Saver(Protocol):
 
 
 class SQLiteSaver:
-    # def __init__(self):
-    #     self._connection()
 
     def save(self, data):
         self.cursor.execute('INSERT INTO FORECASTS (status, wind, temp_max, temp_min, pressure, visibility, sunset, sunrise, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', data.values())

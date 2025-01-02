@@ -1,5 +1,3 @@
-import datetime
-
 import ipinfo
 import json
 import myipaddress as myip
@@ -33,16 +31,6 @@ class Model:
 
         observation = self.wm.weather_at_place(self.address)
         w = observation.weather
-
-        # self.content = {'status': w.detailed_status,
-        #                 'wind': w.wind()['speed'],
-        #                 'temp_max': int(w.temperature('celsius')['temp_max']),
-        #                 'temp_min': int(w.temperature('celsius')['temp_min']),
-        #                 'pressure': w.barometric_pressure()['press'],
-        #                 'visibility': w.visibility(),
-        #                 'sunset': str(w.sunset_time('date').astimezone().time()),
-        #                 'sunrise': str(w.sunset_time('date').astimezone().time()),
-        #                 'dt': str(datetime.datetime.now().astimezone())}
 
         self.forecast = Forecast(w.detailed_status,
                                  w.wind()['speed'],

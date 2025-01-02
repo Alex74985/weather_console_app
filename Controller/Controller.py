@@ -1,7 +1,4 @@
-import sys
-
 from View.View import View
-from pynput import keyboard
 
 
 class Controller:
@@ -27,7 +24,6 @@ class Controller:
         self.mModel.menu()
 
     def get_latest_forecasts(self):
-
         try:
             n = int(self.mView.ask_n())
             self.mModel.get_latest_forecasts(n)
@@ -37,17 +33,14 @@ class Controller:
         self.mModel.menu()
 
     def _on_press(self, key):
-        # print(type(key), key)
         menu = {1: self.get_weather,
                 2: self.set_address,
                 3: self.get_latest_forecasts,
                 4: self.close}
         try:
-            # if key == keyboard.Key.esc:
-            #     return False
             if key in menu.keys():
                 menu[key]()
-        except AttributeError as e:
+        except AttributeError:
             self.mView.print_exec(f"Неверный ввод")
             self.mModel.menu()
 
@@ -55,9 +48,6 @@ class Controller:
         self.mModel.menu()
         while self.running:
             self._on_press(int(input()))
-            # self.mView.start()
-            # with keyboard.Listener(on_press=self._on_press) as listener:
-            #     listener.join()
 
     def close(self):
         self.running = False

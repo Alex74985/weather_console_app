@@ -1,7 +1,3 @@
-import sys
-import threading
-import os
-import time
 from Utility.Observer import Observer
 
 

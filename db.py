@@ -1,5 +1,3 @@
-
-
 def create_db_if_not_exist():
 
     import sqlite3
