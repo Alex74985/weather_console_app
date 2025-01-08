@@ -2,8 +2,11 @@ import ipinfo
 import json
 import myipaddress as myip
 from pyowm import OWM
+from pyowm.utils.config import get_default_config
 from Utility.Saver import Saver
 from Utility.Forecast import Forecast
+from datetime import datetime
+from translate import Translator
 
 
 class Model:
@@ -11,8 +14,11 @@ class Model:
         self.forecast = None
         self.address = None
         self.client_ip = None
-        self._mObservers = []
+        self._model_observers = []
         self._saver = saver
+        config_dict = get_default_config()
+        config_dict['language'] = 'ru'
+        self.translator = Translator(from_lang="english", to_lang="russian")
         with open('api.json', 'r') as file:
             api_data = json.load(file)
             self.wm = OWM(api_data['OpenWeather api key']).weather_manager()
@@ -32,15 +38,13 @@ class Model:
         observation = self.wm.weather_at_place(self.address)
         w = observation.weather
 
-        self.forecast = Forecast(w.detailed_status,
+        self.forecast = Forecast(datetime.utcfromtimestamp(w.ref_time).astimezone(),
+                                 self.address,
+                                 w.detailed_status,
+                                 int(w.temperature('celsius')['temp']),
+                                 int(w.temperature('celsius')['feels_like']),
                                  w.wind()['speed'],
-                                 int(w.temperature('celsius')['temp_max']),
-                                 int(w.temperature('celsius')['temp_min']),
-                                 w.barometric_pressure()['press'],
-                                 w.visibility(),
-                                 str(w.sunset_time('date').astimezone().time()),
-                                 str(w.sunset_time('date').astimezone().time()),
-                                 self.address)
+                                 )
 
         self.display = self.forecast
         self._notify_observers()
@@ -56,7 +60,8 @@ class Model:
 
     def _get_client_address(self):
         self.client_ip = myip.public_ip()
-        self.address = self.handler.getDetails(self.client_ip).details['city']
+        _address = self.handler.getDetails(self.client_ip).details['city']
+        self.address = self.translator.translate(_address)
 
     def get_latest_forecasts(self, n):
         result = []
@@ -66,17 +71,18 @@ class Model:
                 for el in ln:
                     result.append(Forecast(*el[1:]))
         except Exception as e:
+            print(e)
             return e
 
         self.display = result
         self._notify_observers()
 
     def add_observer(self, inObserver):
-        self._mObservers.append(inObserver)
+        self._model_observers.append(inObserver)
 
     def remove_observer(self, inObserver):
-        self._mObservers.remove(inObserver)
+        self._model_observers.remove(inObserver)
 
     def _notify_observers(self):
-        for x in self._mObservers:
+        for x in self._model_observers:
             x.model_is_changed()

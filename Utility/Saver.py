@@ -15,11 +15,11 @@ class Saver(Protocol):
 class SQLiteSaver:
 
     def save(self, data):
-        self.cursor.execute('INSERT INTO FORECASTS (status, wind, temp_max, temp_min, pressure, visibility, sunset, sunrise, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', data.values())
+        self.cursor.execute('INSERT INTO FORECASTS (dt, location, status, temp, temp_fl, wind) VALUES (?, ?, ?, ?, ?, ?)', data.values())
 
     def read(self, n):
-        self.cursor.execute("SELECT * FROM FORECASTS ORDER BY 'id' DESC ")
-        last_n = self.cursor.fetchmany(n)
+        self.cursor.execute("SELECT * FROM FORECASTS ORDER BY id DESC LIMIT (?)", (n, ))
+        last_n = self.cursor.fetchall()
         return last_n
 
     def _connection(self):

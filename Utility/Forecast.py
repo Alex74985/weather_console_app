@@ -1,35 +1,25 @@
 class Forecast:
-    def __init__(self, status, wind, temp_max, temp_min, pressure, visibility, sunset, sunrise, location):
-        self._status = status
-        self._wind = wind
-        self._temp_max = temp_max
-        self._temp_min = temp_min
-        self._pressure = pressure
-        self._visibility = visibility
-        self._sunset = sunset
-        self._sunrise = sunrise
+    def __init__(self, time, location, status, temp, feels_like, wind):
         self._location = location
+        self._status = status
+        self._temp = temp
+        self._feels_like = feels_like
+        self._wind = wind
+        self._time = time
 
     def __repr__(self):
-        return f'\n-----------------------\n' \
+        return f'Текущее время: {self._time}\n'\
+               f'Название города: {self._location}\n' \
                f'Погода: {self._status}\n' \
-               f'Скорость ветра: {self._wind}\n' \
-               f'Максимальная температура: {self._temp_max}\n' \
-               f'Минимальная температура: {self._temp_min}\n' \
-               f'Атмосферное давление: {self._pressure}\n' \
-               f'Видимость: {self._visibility}\n' \
-               f'Восход: {self._sunrise}\n' \
-               f'Закат: {self._sunset}\n' \
-               f'Место: {self._location}\n' \
-               f'-----------------------\n'
+               f'Текущая температура: {self._temp} градусов по цельсию\n' \
+               f'Ощущается как: {self._feels_like} градусов по цельсию\n' \
+               f'Скорость ветра: {self._wind} м/с\n'
 
     def values(self) -> tuple:
-        return tuple([self._status,
+        return tuple([self._time,
+                      self._location,
+                      self._status,
+                      self._temp,
+                      self._feels_like,
                       self._wind,
-                      self._temp_max,
-                      self._temp_min,
-                      self._pressure,
-                      self._visibility,
-                      self._sunset,
-                      self._sunrise,
-                      self._location])
+                      ])

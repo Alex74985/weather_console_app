@@ -38,16 +38,19 @@ class Controller:
                 3: self.get_latest_forecasts,
                 4: self.close}
         try:
+            key = int(key)
             if key in menu.keys():
                 menu[key]()
-        except AttributeError:
-            self.mView.print_exec(f"Неверный ввод")
+            else:
+                raise ValueError
+        except ValueError:
+            self.mView.print_exec(f"Введите пункт меню целым числом")
             self.mModel.menu()
 
     def _start(self):
         self.mModel.menu()
         while self.running:
-            self._on_press(int(input()))
+            self._on_press(input())
 
     def close(self):
         self.running = False

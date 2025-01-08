@@ -7,7 +7,7 @@ def create_db_if_not_exist():
     cursor = connection.cursor()
 
     # Создаем таблицу Forecasts
-    cursor.execute("CREATE TABLE IF NOT EXISTS Forecasts (id INTEGER PRIMARY KEY, status TEXT NOT NULL, wind INTEGER, temp_max INTEGER, temp_min INTEGER, pressure INTEGER, visibility INTEGER, sunset TEXT, sunrise TEXT, location TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS Forecasts (id INTEGER PRIMARY KEY, dt DATETIME, location TEXT, status TEXT NOT NULL, temp INTEGER, temp_fl INTEGER,  wind INTEGER)")
 
     # Сохраняем изменения и закрываем соединение
     connection.commit()
