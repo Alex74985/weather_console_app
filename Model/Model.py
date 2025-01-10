@@ -5,7 +5,7 @@ from pyowm import OWM
 from pyowm.utils.config import get_default_config
 from Utility.Saver import Saver
 from Utility.Forecast import Forecast
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from translate import Translator
 
 
@@ -38,7 +38,7 @@ class Model:
         observation = self.wm.weather_at_place(self.address)
         w = observation.weather
 
-        self.forecast = Forecast(datetime.utcfromtimestamp(w.ref_time).astimezone(),
+        self.forecast = Forecast(datetime.fromtimestamp(w.ref_time, timezone(timedelta(seconds=w.utc_offset))),
                                  self.address,
                                  w.detailed_status,
                                  int(w.temperature('celsius')['temp']),
